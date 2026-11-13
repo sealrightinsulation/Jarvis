@@ -79,7 +79,8 @@ export async function readTool(connector, tool, input, opts = {}) {
   const server = SERVERS[connector];
   const cache = { staleTime: opts.staleMs ?? 5 * 60 * 1000, gcTime: 24 * 60 * 60 * 1000 };
   if (opts.force) cache.refresh = true;
-  const attempt = async () => mcp.callTool(server, tool, input, { cache, signal: opts.signal });
+  const options = opts.signal ? { cache, signal: opts.signal } : { cache };
+  const attempt = async () => mcp.callTool(server, tool, input, options);
   let result;
   try {
     result = await attempt();

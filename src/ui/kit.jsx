@@ -1,6 +1,6 @@
 // Shared UI kit. Every sheet is built from these so the whole drawing set reads as one system.
 
-import { useState, useEffect, useRef, useMemo } from 'preact/hooks';
+import { useState, useEffect, useLayoutEffect, useRef, useMemo } from 'preact/hooks';
 import { Icon, StatusIcon, statusWord } from './icons.jsx';
 
 const cx = (...a) => a.filter(Boolean).join(' ');
@@ -347,13 +347,18 @@ export function Findings({ findings, onAction, empty, limit }) {
 /** Right-hand drawer with focus handling. Escape closes it (and claims the key so reading aloud continues). */
 export function Drawer({ title, onClose, wide, footer, children }) {
   const ref = useRef(null);
-  useEffect(() => {
-    const prev = document.activeElement;
+  const opener = useRef(null);
+  // Move focus in before the first paint, to the field the drawer is for (never to Close,
+  // where a quick Enter would dismiss it).
+  useLayoutEffect(() => {
+    opener.current = document.activeElement;
     const el = ref.current;
-    if (el) {
-      const first = el.querySelector('[data-autofocus], input, textarea, select, button');
-      if (first && first.focus) first.focus();
-    }
+    if (!el) return;
+    const first = el.querySelector('[data-autofocus]') || el.querySelector('.drawer__bd input, .drawer__bd textarea, .drawer__bd select') || el.querySelector('.drawer__bd button') || el.querySelector('button');
+    if (first && first.focus) first.focus();
+  }, []);
+  useEffect(() => {
+    const prev = opener.current;
     const onKey = (e) => {
       if (e.key === 'Escape') {
         e.preventDefault();

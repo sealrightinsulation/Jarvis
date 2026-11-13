@@ -125,6 +125,11 @@ export function shortDate(s, now) {
   const base = `${MONTHS[d.getMonth()]} ${d.getDate()}`;
   return now && d.getFullYear() === now.getFullYear() ? base : `${base}, ${d.getFullYear()}`;
 }
+/** "Nov 13", never with a year: for chart axes where the range is obvious. */
+export function dayLabel(s) {
+  const d = parseDate(s);
+  return d ? `${MONTHS[d.getMonth()]} ${d.getDate()}` : '';
+}
 /** "2026-11" -> "Nov 2026"; "Nov" when short. */
 export function monthLabel(key, short) {
   const m = /^(\d{4})-(\d{2})$/.exec(key || '');

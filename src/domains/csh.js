@@ -175,10 +175,24 @@ export function compute(ctx) {
     }
   }
   const reserveT = toNum(s.reserveTarget);
+  // One lookout per week. Only the week the balance first drops below zero (or below the
+  // owner's minimum) raises its hand; later weeks in the same hole just keep watch.
+  let crossedZero = false;
+  let crossedReserve = false;
   for (const w of forecast.weeks) {
     if (!forecast.startKnown) break;
-    minions.push(minion(`csh.week:${w.index}`, 'csh', 'Week-ahead lookout', `Week of ${shortDate(w.from, now)}`, w.balance < 0 ? 'alert' : reserveT !== null && w.balance < reserveT ? 'watch' : 'clear', `${money(w.inflow)} in, ${money(w.outflow)} out, ending near ${money(w.balance)} on known items.`, { weight: w.balance < 0 ? 90 - w.index : 30 - w.index, amount: w.balance }));
+    let status = 'clear';
+    if (w.balance < 0) {
+      status = crossedZero ? 'watch' : 'alert';
+      crossedZero = true;
+    } else if (reserveT !== null && w.balance < reserveT) {
+      status = 'watch';
+      crossedReserve = true;
+    }
+    const first = status === 'alert';
+    minions.push(minion(`csh.week:${w.index}`, 'csh', 'Week-ahead lookout', `Week of ${shortDate(w.from, now)}`, status, `${money(w.inflow)} in, ${money(w.outflow)} out, ending near ${money(w.balance)} on known items.${first ? ' This is the first week the known bills outrun the cash.' : ''}`, { weight: first ? 88 : 12 - w.index / 2, amount: w.balance, action: { label: 'See the forecast', go: { sheet: 'csh' } } }));
   }
+  void crossedReserve;
   for (const o of (registers.obligations || []).filter((r) => inScope(r, scope) && r.nextDue)) {
     const d = daysBetween(now, o.nextDue);
     if (d === null || d > 21) continue;

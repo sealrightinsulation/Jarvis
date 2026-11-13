@@ -81,7 +81,7 @@
   --sp-7: 48px;
   --radius: 3px;
   --radius-lg: 6px;
-  --rail-w: 236px;
+  --rail-w: 252px;
 }
 
 @media (prefers-color-scheme: dark) {

@@ -33,16 +33,16 @@ export function compute(ctx) {
   it['str.profit_target'] = pt !== null ? (rev.loaded && rev.hasCosts ? live(`${money(rev.ytd - rev.costsYtd)} of ${money(pt)}`, 'From QuickBooks profit and loss.', 'QuickBooks', rev.ytd - rev.costsYtd < pt * yearShare ? 'watch' : 'good') : partial(`Target ${money(pt)}`, 'Progress cannot be measured: profit is not in the books until expenses are recorded.', 'Your target', 'watch', { label: 'How to fix the books', go: { sheet: 'fin', anchor: 'books' } })) : blind('No profit target is set.', fixSettings('main', 'profitTarget', 'Set a target'));
 
   // ---- plans by kind ----
-  const planItem = (kinds, label, extra = '') => {
+  const planItem = (kinds, label, extra = '', addLabel = 'Add a plan') => {
     const list = plans.filter((p) => kinds.includes(p.kind) && p.status !== 'dropped' && p.status !== 'done');
-    return list.length ? live(`${plural(list.length, 'plan')}`, list.slice(0, 3).map((p) => `${p.name}${toNum(p.investment) ? ` (${moneyShort(p.investment)}${toNum(p.expectedReturn) ? ` for ${moneyShort(p.expectedReturn)} a year` : ''})` : ''}`).join('; ') + '.', 'Your growth plans', 'none', fixRegister('initiatives', 'Add')) : blind(`No ${label} written down.${extra}`, fixRegister('initiatives', `Add ${label.replace(/s$/, '')}`));
+    return list.length ? live(`${plural(list.length, 'plan')}`, list.slice(0, 3).map((p) => `${p.name}${toNum(p.investment) ? ` (${moneyShort(p.investment)}${toNum(p.expectedReturn) ? ` for ${moneyShort(p.expectedReturn)} a year` : ''})` : ''}`).join('; ') + '.', 'Your growth plans', 'none', fixRegister('initiatives', 'Add')) : blind(`No ${label} written down.${extra}`, fixRegister('initiatives', addLabel));
   };
-  it['str.opportunities'] = planItem(['opportunity'], 'growth opportunities');
-  it['str.services'] = planItem(['service'], 'new services');
+  it['str.opportunities'] = planItem(['opportunity'], 'growth opportunities', '', 'Add a growth plan');
+  it['str.services'] = planItem(['service'], 'new services', '', 'Add a growth plan');
   const cities = model.jt ? [...new Set(model.jt.jobs.map((j) => j.city).filter(Boolean))] : [];
-  it['str.markets'] = planItem(['market'], 'new markets', cities.length && scope !== 'sr' ? ` JobTread jobs today are in ${cities.slice(0, 6).join(', ')}.` : '');
-  it['str.hiring'] = planItem(['hire'], 'hiring plans', people.length ? ` The roster has ${plural(people.length, 'person', 'people')}.` : '');
-  it['str.equipment_plan'] = planItem(['equipment'], 'equipment purchases');
+  it['str.markets'] = planItem(['market'], 'new markets', cities.length && scope !== 'sr' ? ` JobTread jobs today are in ${cities.slice(0, 6).join(', ')}.` : '', 'Add a growth plan');
+  it['str.hiring'] = planItem(['hire'], 'hiring plans', people.length ? ` The roster has ${plural(people.length, 'person', 'people')}.` : '', 'Add a growth plan');
+  it['str.equipment_plan'] = planItem(['equipment'], 'equipment purchases', '', 'Add a growth plan');
 
   it['str.financing'] = st.financingStrategy ? live('Written down', `${String(st.financingStrategy).slice(0, 160)}${String(st.financingStrategy).length > 160 ? '…' : ''}${loans.length ? ` ${plural(loans.length, 'facility', 'facilities')} on file.` : ''}`, 'Your strategy notes', 'none', fixSettings('strategy', 'financingStrategy', 'Edit')) : blind('How growth gets paid for is not written down.', fixSettings('strategy', 'financingStrategy', 'Write it down'));
   it['str.competitors'] = comps.length ? live(`${plural(comps.length, 'competitor')} profiled`, comps.slice(0, 3).map((c) => c.name).join(', ') + '.', 'Your competitor notes', 'none', fixRegister('competitors', 'Add')) : blind('No competitor analysis is on file.', fixRegister('competitors', 'Add a competitor'));

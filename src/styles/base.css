@@ -83,6 +83,7 @@ a { color: var(--accent); text-underline-offset: 2px; }
 }
 .index { display: flex; flex-direction: column; gap: 1px; }
 .index__item {
+  position: relative;
   display: grid;
   grid-template-columns: 2.9rem minmax(0, 1fr) auto;
   align-items: center;
@@ -99,7 +100,8 @@ a { color: var(--accent); text-underline-offset: 2px; }
 .index__item:hover { background: var(--well); color: var(--ink); }
 .index__item[aria-current="page"] { background: var(--accent-wash); color: var(--ink); box-shadow: inset 2px 0 0 var(--accent); }
 .index__no { font-family: var(--font-mono); font-size: 0.6875rem; color: var(--ink-3); }
-.index__name { font-size: var(--t-sm); font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.index__name { font-size: var(--t-sm); font-weight: 500; line-height: 1.25; overflow-wrap: anywhere; }
+.sheetnav .index__name { white-space: nowrap; }
 .index__flag { display: inline-flex; align-items: center; gap: 4px; font-family: var(--font-mono); font-size: 0.6875rem; }
 
 .rail__foot { margin-top: auto; padding: var(--sp-2); font-size: var(--t-xs); color: var(--ink-3); display: flex; flex-direction: column; gap: var(--sp-1); }
@@ -142,6 +144,7 @@ a { color: var(--accent); text-underline-offset: 2px; }
   .app { grid-template-columns: minmax(0, 1fr); }
   .rail { display: none; }
   .sheetnav {
+    position: relative;
     display: flex;
     gap: var(--sp-1);
     overflow-x: auto;
@@ -302,7 +305,8 @@ button.tile:hover { background: var(--well); }
 
 /* ---------- tables ---------- */
 
-.scroll-x { overflow-x: auto; min-width: 0; }
+/* position: relative keeps absolutely positioned children (screen-reader text) inside the scroller */
+.scroll-x { overflow-x: auto; min-width: 0; position: relative; }
 .tbl { width: 100%; border-collapse: collapse; font-size: var(--t-sm); }
 .tbl th, .tbl td { padding: 7px var(--sp-3); text-align: left; vertical-align: top; border-top: 1px solid var(--rule); }
 .tbl thead th {

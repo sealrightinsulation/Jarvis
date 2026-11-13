@@ -188,8 +188,8 @@ const JOBS = [
   { id: 'j2', name: 'Howell Basement', number: '1051', location: { id: 'l2', name: '12 Shore Rd', city: 'Lakeshore', state: 'ON', account: acct('a2', 'Greg Howell') } },
   { id: 'j3', name: 'Alden 20x20 Sunroom', number: '1062', location: { id: 'l3', name: '5 Smith Rd', city: 'Essex', state: 'ON', account: acct('a3', 'Alden') } },
   { id: 'j4', name: 'Josh 45x30 Pole Barn', number: '1074', location: { id: 'l4', name: '22 County Rd', city: 'Lakeshore', state: 'ON', account: acct('a4', 'Josh - Woodslee') } },
-  { id: 'j5', name: 'Sawyer Barndominium', number: '1068', location: { id: 'l5', name: 'Deer Run', city: 'Leamington', state: 'ON', account: acct('a5', 'Nick Sawyer') } },
-  { id: 'j6', name: 'Sawyer - Steel Option', number: '1077', location: { id: 'l5', name: 'Deer Run', city: 'Leamington', state: 'ON', account: acct('a5', 'Nick Sawyer') } },
+  { id: 'j5', name: 'Sawyer Barndominium', number: '1068', location: { id: 'l5', name: 'Deer Run', city: 'Exampleton', state: 'ON', account: acct('a5', 'Nick Sawyer') } },
+  { id: 'j6', name: 'Sawyer - Steel Option', number: '1077', location: { id: 'l5', name: 'Deer Run', city: 'Exampleton', state: 'ON', account: acct('a5', 'Nick Sawyer') } },
   { id: 'j7', name: 'Dobson Barn Re-Clad', number: '1067', location: { id: 'l7', name: 'County Rd 34', city: null, state: 'ON', account: acct('a7', 'Dan Dobson') } },
   { id: 'j8', name: '1902 Middle Rd - New Build', number: '1057', location: { id: 'l8', name: '1902 Middle Rd', city: 'Lakeshore', state: 'ON', account: acct('a8', 'Owner build') } },
 ];

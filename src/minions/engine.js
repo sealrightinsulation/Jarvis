@@ -10,7 +10,7 @@
 //   id        stable unique id, e.g. "csh.overdue:inv:1042"
 //   division  domain key ('fin', 'job', ...)
 //   role      what kind of watch this is, e.g. "Overdue invoice chaser"
-//   target    what it is watching, e.g. "INV-1042 · Fehr Residence"
+//   target    what it is watching, e.g. "Invoice 1042 · Maple Ridge Homes"
 //   status    'alert' | 'watch' | 'clear' | 'blind'
 //   finding   one sentence in plain language: what it sees right now
 //   action    optional {label, go: {sheet, register?, anchor?}}: the one thing the owner can do

@@ -10,7 +10,8 @@ export const companiesIn = (model, scope) => scopeKeys(scope).map((k) => model.c
 export const jtIn = (model, scope) => (scope === 'sr' ? null : model.jt);
 export const scopeName = (scope) => (scope === 'all' ? 'both companies' : COMPANIES[scope].name);
 
-/** Loose name match across systems ("Greg Howe" vs "Greig Howe", "Allen" vs "Allen & Suzette"). */
+/** Loose name match across systems: a one-letter spelling difference, or a short name that the
+ *  longer one starts with ("Dana Reyes" vs "Dana Reyez", "Alden" vs "Alden & Sue"). */
 export function sameParty(a, b) {
   const x = nameKey(a);
   const y = nameKey(b);

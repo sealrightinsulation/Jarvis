@@ -84,21 +84,21 @@ test('bank description classifier', () => {
   assert.equal(k('Debit Memo           FREE INTERAC E-TRANSFER', -1000).transfer, false);
   assert.equal(k('Credit Memo          FREE INTERAC E-TRANSFER', 900).kind, 'etransfer_in');
   assert.equal(k('Service Charge       INTERAC E-TRANSFER FEE', -1).kind, 'fees');
-  assert.equal(k('Returned Cheque - NSF', 626.13).kind, 'nsf_return');
-  assert.equal(k('Business PAD         GOVERNMENT TAX PAYMENTS', -63650.65).kind, 'tax');
+  assert.equal(k('Returned Cheque - NSF', 410.5).kind, 'nsf_return');
+  assert.equal(k('Business PAD         GOVERNMENT TAX PAYMENTS', -3200).kind, 'tax');
   assert.equal(k('PAD CCRA             CANADA', -2000).kind, 'tax');
-  assert.equal(k('Business PAD         NATL BANK EQUIP FINANCE', -2964.8).kind, 'equipment_finance');
-  assert.equal(k('Loans                RBC LOAN PYMT', -656.38).kind, 'loan');
-  assert.equal(k('Miscellaneous Payment   DOMINION OF CANADA GROUP', -2007.46).kind, 'insurance');
-  assert.equal(k('POS Purchase         JOHNNY S BREAKAWAY GAS   Leami', -250.61).purpose, 'fuel');
-  assert.equal(k('Bill Payment         MB-COLLABRIA MASTERCARD XXXX5713', -2000).kind, 'card_payment');
+  assert.equal(k('Business PAD         NORTHWAY EQUIP FINANCE', -1500).kind, 'equipment_finance');
+  assert.equal(k('Loans                EXAMPLE BANK LOAN PYMT', -640).kind, 'loan');
+  assert.equal(k('Miscellaneous Payment   HARBOUR MUTUAL INSURANCE', -1210.25).kind, 'insurance');
+  assert.equal(k('POS Purchase         LAKESIDE GAS BAR         Town', -210.4).purpose, 'fuel');
+  assert.equal(k('Bill Payment         MB-EXAMPLE MASTERCARD XXXX0000', -2000).kind, 'card_payment');
   assert.equal(k('Cheque', -5000).kind, 'cheque');
   assert.equal(k('Cheque Delete', 5000).kind, 'cheque_reversal');
-  assert.equal(k('Deposit', 240000).kind, 'deposit');
+  assert.equal(k('Deposit', 50000).kind, 'deposit');
   assert.equal(k('ABM Withdrawal', -400).kind, 'cash');
-  assert.equal(k('PAYMENT FROM - *****XX*8210', 300, 'card').transfer, true);
-  assert.equal(k('INTEREST CHARGES-PURCHASE', -90.2, 'card').kind, 'interest');
-  assert.equal(k('LEAMINGTON EQUIPMENT RENTL LEAMINGTON ON', -392.27, 'card').purpose, 'equipment_rental');
+  assert.equal(k('PAYMENT FROM - *****XX*1111', 300, 'card').transfer, true);
+  assert.equal(k('INTEREST CHARGES-PURCHASE', -92.1, 'card').kind, 'interest');
+  assert.equal(k('TOWNLINE EQUIPMENT RENTL TOWN ON', -390, 'card').purpose, 'equipment_rental');
 });
 
 test('recurring payments are detected with their cadence', () => {
@@ -191,9 +191,9 @@ test('backlog, revenue series and customer rollup', () => {
 });
 
 test('name matching and schedules', () => {
-  assert.ok(sameParty('Greg Howe', 'Greig Howe'));
-  assert.ok(sameParty('Allen', 'Allen & Suzette'));
-  assert.ok(!sameParty('Karen', 'Kyle Noga'));
+  assert.ok(sameParty('Dana Reyes', 'Dana Reyez'));
+  assert.ok(sameParty('Alden', 'Alden & Sue'));
+  assert.ok(!sameParty('Karen', 'Kyle Nolan'));
   assert.deepEqual(occurrences('2026-11-06', 'biweekly', new Date(2026, 10, 13), new Date(2026, 11, 20)), ['2026-11-20', '2026-12-04', '2026-12-18']);
   assert.equal(perMonth(1000, 'biweekly'), 2166.67);
 });

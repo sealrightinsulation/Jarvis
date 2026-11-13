@@ -155,7 +155,9 @@ function merchantKey(s) {
       .replace(/^FPOS\s+/, '')
       .replace(/X{2,}\S*/g, '')
       .replace(/#\S+/g, '')
-      .replace(/\b(LEAMI\w*|KINGSVILLE|ESSEX|WINDSOR|HARROW|LASAL\w*|WHEATLEY|ON|ONT)\b.*$/, '')
+      // drop the trailing town / province the bank appends ("... TOWN ON")
+      .replace(/\s+[A-Z][A-Z'.-]{2,}\s+(ON|ONT|QC|BC|AB|MB|SK|NS|NB)\s*$/, '')
+      .replace(/\s+(ON|ONT)\s*$/, '')
       .trim(),
   ).slice(0, 40);
 }

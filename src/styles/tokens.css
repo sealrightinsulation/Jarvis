@@ -1,0 +1,187 @@
+/* Jarvis design tokens.
+   Layout concept: a drawing set. A sheet index down the left, one "sheet" per management area,
+   each opened by a title block (sheet no., title, revision time, sources). Light theme is a
+   whiteprint on cool vellum; dark theme is a blueprint. Status colours are reserved for state
+   and never used as decoration. */
+
+:root {
+  /* surfaces */
+  --paper: #eef2f6;
+  --sheet: #fbfcfd;
+  --well: #f2f5f8;
+  --raised: #ffffff;
+  /* ink */
+  --ink: #0f1f2e;
+  --ink-2: #3c5166;
+  --ink-3: #5f7183;
+  /* rules */
+  --rule: #d6dde5;
+  --rule-strong: #a9b6c3;
+  --grid-line: rgba(15, 31, 46, 0.05);
+  /* accent: blueprint blue */
+  --accent: #1c5cab;
+  --accent-strong: #184f95;
+  --accent-ink: #ffffff;
+  --accent-wash: #e2edfa;
+  /* state (reserved) */
+  --good: #0ca30c;
+  --good-ink: #006300;
+  --good-wash: #e2f3e2;
+  --warn: #fab219;
+  --warn-ink: #7a5200;
+  --warn-wash: #fff0cc;
+  --serious: #ec835a;
+  --serious-ink: #9c3f17;
+  --serious-wash: #fde5da;
+  --crit: #d03b3b;
+  --crit-ink: #a82424;
+  --crit-wash: #fbe0e0;
+  --blind: #8b98a6;
+  --blind-ink: #55677a;
+  --blind-wash: #e8ecf1;
+  /* chart series (validated on --sheet, light) */
+  --s1: #2a78d6;
+  --s2: #eb6834;
+  --s3: #1baf7a;
+  --s4: #eda100;
+  --s5: #e87ba4;
+  --s6: #008300;
+  --s7: #6250d6;
+  --s8: #e34948;
+  --seq-1: #cde2fb;
+  --seq-2: #86b6ef;
+  --seq-3: #3987e5;
+  --seq-4: #1c5cab;
+  --seq-5: #0d366b;
+  --chart-grid: #e2e7ec;
+  --chart-axis: #b9c4cf;
+  /* elevation */
+  --shadow: 0 1px 2px rgba(15, 31, 46, 0.06), 0 8px 24px rgba(15, 31, 46, 0.08);
+  --scrim: rgba(15, 31, 46, 0.38);
+
+  /* type */
+  --font-display: "Barlow Condensed", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+  --font-body: "Barlow", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --t-xs: 0.75rem;
+  --t-sm: 0.8125rem;
+  --t-md: 0.9375rem;
+  --t-lg: 1.125rem;
+  --t-xl: 1.5rem;
+  --t-2xl: 2rem;
+  --t-3xl: 2.75rem;
+
+  /* space + shape */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 24px;
+  --sp-6: 32px;
+  --sp-7: 48px;
+  --radius: 3px;
+  --radius-lg: 6px;
+  --rail-w: 236px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --paper: #0b1622;
+    --sheet: #14212f;
+    --well: #0f1b28;
+    --raised: #1a2a3b;
+    --ink: #e8eef4;
+    --ink-2: #b7c5d3;
+    --ink-3: #8a9db0;
+    --rule: #26384b;
+    --rule-strong: #3d546c;
+    --grid-line: rgba(150, 195, 240, 0.055);
+    --accent: #6da7ec;
+    --accent-strong: #9ec5f4;
+    --accent-ink: #0b1622;
+    --accent-wash: #1a3352;
+    --good: #0ca30c;
+    --good-ink: #62d262;
+    --good-wash: #12301a;
+    --warn: #fab219;
+    --warn-ink: #fbc24a;
+    --warn-wash: #3a2d0b;
+    --serious: #ec835a;
+    --serious-ink: #f3a07e;
+    --serious-wash: #3c2417;
+    --crit: #d03b3b;
+    --crit-ink: #f58484;
+    --crit-wash: #3e1b1f;
+    --blind: #6f8296;
+    --blind-ink: #9fb0c1;
+    --blind-wash: #1d2b3a;
+    --s1: #3987e5;
+    --s2: #d95926;
+    --s3: #199e70;
+    --s4: #c98500;
+    --s5: #d55181;
+    --s6: #008300;
+    --s7: #9085e9;
+    --s8: #e66767;
+    --seq-1: #184f95;
+    --seq-2: #256abf;
+    --seq-3: #3987e5;
+    --seq-4: #86b6ef;
+    --seq-5: #cde2fb;
+    --chart-grid: #223345;
+    --chart-axis: #3d546c;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 10px 28px rgba(0, 0, 0, 0.35);
+    --scrim: rgba(3, 9, 16, 0.6);
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --paper: #0b1622;
+  --sheet: #14212f;
+  --well: #0f1b28;
+  --raised: #1a2a3b;
+  --ink: #e8eef4;
+  --ink-2: #b7c5d3;
+  --ink-3: #8a9db0;
+  --rule: #26384b;
+  --rule-strong: #3d546c;
+  --grid-line: rgba(150, 195, 240, 0.055);
+  --accent: #6da7ec;
+  --accent-strong: #9ec5f4;
+  --accent-ink: #0b1622;
+  --accent-wash: #1a3352;
+  --good: #0ca30c;
+  --good-ink: #62d262;
+  --good-wash: #12301a;
+  --warn: #fab219;
+  --warn-ink: #fbc24a;
+  --warn-wash: #3a2d0b;
+  --serious: #ec835a;
+  --serious-ink: #f3a07e;
+  --serious-wash: #3c2417;
+  --crit: #d03b3b;
+  --crit-ink: #f58484;
+  --crit-wash: #3e1b1f;
+  --blind: #6f8296;
+  --blind-ink: #9fb0c1;
+  --blind-wash: #1d2b3a;
+  --s1: #3987e5;
+  --s2: #d95926;
+  --s3: #199e70;
+  --s4: #c98500;
+  --s5: #d55181;
+  --s6: #008300;
+  --s7: #9085e9;
+  --s8: #e66767;
+  --seq-1: #184f95;
+  --seq-2: #256abf;
+  --seq-3: #3987e5;
+  --seq-4: #86b6ef;
+  --seq-5: #cde2fb;
+  --chart-grid: #223345;
+  --chart-axis: #3d546c;
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 10px 28px rgba(0, 0, 0, 0.35);
+  --scrim: rgba(3, 9, 16, 0.6);
+}

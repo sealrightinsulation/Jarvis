@@ -1,0 +1,19 @@
+{
+  "name": "jarvis",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Jarvis - an owner's command deck for Seal Right Insulations and Advanced Builds. Publishes as a single-file Claude Artifact that reads QuickBooks and JobTread live.",
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "test": "node --test \"test/unit/*.test.js\"",
+    "e2e": "node test/e2e/run.mjs",
+    "check": "npm run build && npm test && npm run e2e"
+  },
+  "devDependencies": {
+    "esbuild": "0.25.10"
+  },
+  "dependencies": {
+    "preact": "10.27.2"
+  }
+}

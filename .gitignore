@@ -1,0 +1,7 @@
+node_modules/
+dist/
+# Real business data never belongs in git. Captured payloads, exports and local previews stay out.
+private/
+*.local.json
+test/e2e/out/
+.DS_Store

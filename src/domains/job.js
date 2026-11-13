@@ -77,7 +77,7 @@ export function compute(ctx) {
     const losing = budgeted.filter((j) => j.projectedMargin < 0);
     it['job.est_vs_actual'] = partial(
       `${money(price - cost)} projected (${pct((price - cost) / price)})`,
-      `${money(price)} of price against ${money(cost)} of budgeted cost on ${plural(budgeted.length, 'budgeted job')}; ${money(sum(budgeted, (j) => j.actual))} spent so far.${losing.length ? ` ${losing.map((j) => j.name).join(', ')} ${losing.length === 1 ? 'is' : 'are'} budgeted to lose money.` : ''} Labour is missing from actual cost.`,
+      `${money(price)} of price against ${money(cost)} of projected cost on ${plural(budgeted.length, 'costed job')}; ${money(sum(budgeted, (j) => j.actual))} recorded so far.${losing.length ? ` JobTread projects ${losing.map((j) => j.name).join(', ')} to lose money.` : ''} Projected cost is JobTread's budget adjusted for the bills received; labour is missing from it.`,
       'JobTread budgets and bills',
       losing.length ? 'alert' : 'good',
     );
@@ -93,7 +93,7 @@ export function compute(ctx) {
     : blind('No signed job has costs or a schedule to measure progress from.');
 
   const remaining = sum(budgeted, (j) => j.remainingCost);
-  it['job.remaining_cost'] = budgeted.length ? partial(`${money(remaining)} left to spend`, `Budgeted cost less cost recorded, on ${plural(budgeted.length, 'budgeted job')}. Understated wherever labour is not in the actuals.`, 'JobTread budgets', 'none') : blind('No budgets to measure remaining cost against.');
+  it['job.remaining_cost'] = budgeted.length ? partial(`${money(remaining)} left to spend`, `JobTread's projected cost less cost recorded, on ${plural(budgeted.length, 'costed job')}. Understated wherever labour is not in the actuals.`, 'JobTread budgets', 'none') : blind('No budgets to measure remaining cost against.');
 
   const items = finalizeItems('job', it);
 
@@ -104,14 +104,14 @@ export function compute(ctx) {
     const base = { action: { label: 'Open job', go: { sheet: 'job', job: j.id } } };
     const signed = j.stage === 'active';
     if (j.hasBudget) {
-      minions.push(minion(`job.margin:${j.id}`, 'job', 'Margin watcher', j.name, j.projectedMargin < 0 ? 'alert' : target && j.projectedMarginPct < target ? 'watch' : 'clear', j.projectedMargin < 0 ? `Budgeted cost ${money(j.projectedCost)} is ${money(-j.projectedMargin)} more than the price ${money(j.projectedPrice)}.` : `Projected margin ${money(j.projectedMargin)} (${pct(j.projectedMarginPct)})${target ? `, target ${pct(target)}` : ''}.`, { ...base, weight: j.projectedMargin < 0 ? 92 : 40, amount: j.projectedMargin }));
-      if (j.actual !== null) minions.push(minion(`job.overrun:${j.id}`, 'job', 'Cost overrun watcher', j.name, j.actual > j.projectedCost * 1.02 ? 'alert' : j.costProgress > 0.9 && (j.progress === null || j.progress < 0.8) ? 'watch' : 'clear', `${money(j.actual)} spent of ${money(j.projectedCost)} budgeted (${pct(j.costProgress)}).`, { ...base, weight: 55, amount: j.actual - j.projectedCost }));
+      minions.push(minion(`job.margin:${j.id}`, 'job', 'Margin watcher', j.name, j.projectedMargin < 0 ? 'alert' : target && j.projectedMarginPct < target ? 'watch' : 'clear', j.projectedMargin < 0 ? `JobTread projects ${money(j.projectedCost)} of cost against a price of ${money(j.projectedPrice)}: ${money(-j.projectedMargin)} over.` : `Projected margin ${money(j.projectedMargin)} (${pct(j.projectedMarginPct)})${target ? `, target ${pct(target)}` : ''}.`, { ...base, weight: j.projectedMargin < 0 ? 92 : 40, amount: j.projectedMargin }));
+      if (j.actual !== null) minions.push(minion(`job.overrun:${j.id}`, 'job', 'Cost overrun watcher', j.name, j.actual > j.projectedCost * 1.02 ? 'alert' : j.costProgress > 0.9 && (j.progress === null || j.progress < 0.8) ? 'watch' : 'clear', `${money(j.actual)} recorded of ${money(j.projectedCost)} projected (${pct(j.costProgress)}).`, { ...base, weight: 55, amount: j.actual - j.projectedCost }));
     } else if (signed) {
       minions.push(minion(`job.nobudget:${j.id}`, 'job', 'Budget checker', j.name, 'blind', `Signed for ${money(j.contract)} but JobTread has no cost budget, so profit cannot be measured.`, { ...base, weight: 45 }));
     }
     if (!signed) continue;
     if (j.underBilled !== null) minions.push(minion(`job.billing:${j.id}`, 'job', 'Billing watcher', j.name, j.underBilled > Math.max(5000, j.contract * 0.05) ? 'watch' : 'clear', j.underBilled > 0 ? `${money(j.actual)} of cost recorded against ${money(j.invoiced)} invoiced: you are carrying ${money(j.underBilled)}.` : `Invoiced ${money(j.invoiced)} against ${money(j.actual)} of recorded cost.`, { ...base, weight: 50, amount: j.underBilled }));
-    if (j.billsUnpaid > 0) minions.push(minion(`job.bills:${j.id}`, 'job', 'Unpaid bill counter', j.name, j.billsOverdue > 0 ? 'alert' : 'watch', `${money(j.billsUnpaid)} of supplier bills unpaid${j.billsOverdue > 0 ? `, ${money(j.billsOverdue)} past due` : ''}.`, { ...base, weight: 60, amount: j.billsUnpaid }));
+    if (j.billsUnpaid > 0) minions.push(minion(`job.bills:${j.id}`, 'job', 'Unpaid bill counter', j.name, j.billsOverdue > 0 ? 'alert' : 'watch', `JobTread shows ${money(j.billsUnpaid)} of supplier bills unpaid${j.billsOverdue > 0 ? `, ${money(j.billsOverdue)} of it past due` : ''}. Bills paid outside JobTread stay "unpaid" until marked.`, { ...base, weight: 60, amount: j.billsUnpaid }));
     if (j.arBalance > 0) minions.push(minion(`job.ar:${j.id}`, 'job', 'JobTread invoice checker', j.name, 'watch', `JobTread shows ${money(j.arBalance)} of invoices unpaid. If QuickBooks shows it paid, mark it paid in JobTread.`, { ...base, weight: 30, amount: j.arBalance }));
     minions.push(minion(`job.remaining:${j.id}`, 'job', 'Left-to-bill tracker', j.name, 'clear', `${money(Math.max(0, j.contract - j.invoiced))} of the ${money(j.contract)} contract is still to invoice.`, { ...base, weight: 10 }));
   }
@@ -120,7 +120,7 @@ export function compute(ctx) {
   const worst = budgeted.slice().sort((a, b) => a.projectedMargin - b.projectedMargin)[0];
   const headline = [
     { label: 'Signed work', value: moneyShort(contract), hint: `${plural(active.length, 'job')} under contract`, go: { sheet: 'job' } },
-    { label: 'Projected job margin', value: budgeted.length ? moneyShort(sum(budgeted, (j) => j.projectedMargin)) : null, blind: !budgeted.length, hint: worst && worst.projectedMargin < 0 ? `${worst.name} is underwater` : budgeted.length ? `${budgeted.length} budgeted` : 'no budgets', health: worst && worst.projectedMargin < 0 ? 'alert' : 'none', go: { sheet: 'job' } },
+    { label: 'Projected job margin', value: budgeted.length ? moneyShort(sum(budgeted, (j) => j.projectedMargin)) : null, blind: !budgeted.length, hint: worst && worst.projectedMargin < 0 ? `${worst.name} projects a loss` : budgeted.length ? `${budgeted.length} budgeted` : 'no budgets', health: worst && worst.projectedMargin < 0 ? 'alert' : 'none', go: { sheet: 'job' } },
   ];
   return { items, headline, minions, data: { jobs, active, budgeted, loaded: true, target, time: jt.time, exampleHidden: jt.exampleJobsHidden, docsShort: jt.docsShort } };
 }

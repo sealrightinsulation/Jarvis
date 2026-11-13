@@ -53,7 +53,7 @@ export function compute(ctx) {
     const losing = costed.filter((j) => j.projectedCost > j.projectedPrice);
     it['fin.gross_profit_jobs'] = partial(
       costed.length ? `${money(price - cost)} projected on ${plural(costed.length, 'signed job')}` : 'No signed job has a budget',
-      `${costed.length} of ${activeJobs.length} signed JobTread jobs have both a budget and a price${losing.length ? `; ${losing.length} ${losing.length === 1 ? 'is' : 'are'} budgeted to cost more than the contract` : ''}. Seal Right jobs are not costed anywhere.`,
+      `${costed.length} of ${activeJobs.length} signed JobTread jobs have both a projected cost and a price${losing.length ? `; JobTread projects ${losing.length} of them to cost more than ${losing.length === 1 ? 'its' : 'their'} price` : ''}. Projected cost is the budget adjusted for bills received, and excludes labour. Seal Right jobs are not costed anywhere.`,
       'JobTread budgets',
       losing.length ? 'alert' : costed.length < activeJobs.length ? 'watch' : 'good',
       fixSheet('job', 'Open job costing'),

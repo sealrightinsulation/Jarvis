@@ -272,7 +272,7 @@ export function JobSheet({ result, state, actions }) {
     <SheetFrame domainKey="job" result={result} state={state} actions={actions}>
       <Tiles>
         <Tile label="Signed work" value={moneyShort(sum(d.active, (j) => j.contract))} hint={plural(d.active.length, 'job')} />
-        <Tile label="Projected margin" value={d.budgeted.length ? moneyShort(sum(d.budgeted, (j) => j.projectedMargin)) : null} blind={!d.budgeted.length} status={d.budgeted.some((j) => j.projectedMargin < 0) ? 'alert' : undefined} hint={d.budgeted.length ? `on ${plural(d.budgeted.length, 'budgeted job')}` : 'no budgets'} />
+        <Tile label="Projected margin" value={d.budgeted.length ? moneyShort(sum(d.budgeted, (j) => j.projectedMargin)) : null} blind={!d.budgeted.length} status={d.budgeted.some((j) => j.projectedMargin < 0) ? 'alert' : undefined} hint={d.budgeted.length ? `on ${plural(d.budgeted.length, 'costed job')}` : 'no budgets'} />
         <Tile label="Cost recorded so far" value={moneyShort(sum(d.active, (j) => j.actual))} hint="supplier bills only, no labour" />
         <Tile label="Still to invoice" value={moneyShort(sum(d.active, (j) => Math.max(0, j.contract - j.invoiced)))} hint="on signed jobs" />
         <Tile label="Bills unpaid on jobs" value={moneyShort(sum(d.active, (j) => j.billsUnpaid))} status={sum(d.active, (j) => j.billsOverdue) > 0 ? 'alert' : undefined} hint={`${money(sum(d.active, (j) => j.billsOverdue))} past due`} />
@@ -286,7 +286,7 @@ export function JobSheet({ result, state, actions }) {
             { key: 'name', label: 'Job', render: (j) => (<>{j.name}<span class="tbl__sub">{j.customer}{j.number ? ` · #${j.number}` : ''}</span></>) },
             { key: 'stage', label: 'Stage', render: (j) => STAGE[j.stage] },
             { key: 'contract', label: 'Contract', align: 'r', render: (j) => (j.contract ? money(j.contract) : j.quoted ? <span class="muted">{money(j.quoted)} quoted</span> : '—'), sort: (j) => j.contract || j.quoted },
-            { key: 'projectedCost', label: 'Budget cost', align: 'r', render: (j) => (j.projectedCost !== null ? money(j.projectedCost) : '—') },
+            { key: 'projectedCost', label: 'Projected cost', align: 'r', render: (j) => (j.projectedCost !== null ? money(j.projectedCost) : '—') },
             { key: 'projectedMarginPct', label: 'Margin', align: 'r', render: (j) => (j.hasBudget ? <Pill status={j.projectedMargin < 0 ? 'alert' : j.health === 'watch' ? 'watch' : 'good'}>{pct(j.projectedMarginPct)}</Pill> : <span class="muted">no budget</span>) },
             { key: 'actual', label: 'Spent', align: 'r', render: (j) => (j.actual !== null ? money(j.actual) : '—') },
             { key: 'invoiced', label: 'Invoiced', align: 'r', render: (j) => (j.invoiced ? money(j.invoiced) : '—') },
@@ -317,10 +317,10 @@ export function JobDetail({ job, minions, actions }) {
     ['Original contract', money(job.originalContract)],
     [`Approved after (${job.changeOrderCount})`, money(job.changeOrders)],
     ['Contract total', money(job.contract), { total: true }],
-    ['Budgeted cost', job.projectedCost !== null ? money(job.projectedCost) : 'no budget'],
+    ['Projected cost (JobTread)', job.projectedCost !== null ? money(job.projectedCost) : 'no budget'],
     ['Projected margin', job.hasBudget ? `${money(job.projectedMargin)} (${pct(job.projectedMarginPct)})` : '—'],
     ['Cost recorded so far', job.actual !== null ? money(job.actual) : 'none'],
-    ['Budget spent', job.costProgress !== null ? pct(job.costProgress) : '—'],
+    ['Share of projected cost spent', job.costProgress !== null ? pct(job.costProgress) : '—'],
     ['Schedule done', job.progress !== null ? pct(job.progress) : 'no schedule'],
     ['Left to spend', job.remainingCost !== null ? money(job.remainingCost) : '—'],
     ['Invoiced', money(job.invoiced)],

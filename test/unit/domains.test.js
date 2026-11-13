@@ -109,7 +109,7 @@ test('job costing flags the job budgeted to lose money', () => {
   assert.equal(byId(job, 'job.labour').coverage, 'blind');
   const varga = job.minions.find((m) => m.id === 'job.margin:j1');
   assert.equal(varga.status, 'alert');
-  assert.match(varga.finding, /\$170,000 more than the price/);
+  assert.match(varga.finding, /\$170,000 over/);
   assert.ok(job.minions.some((m) => m.id === 'job.bills:j1' && m.status === 'alert'));
   // Seal Right scope: honest blind, no throw
   const sr = computeAll(ctxFor('sr')).results.job;

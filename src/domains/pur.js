@@ -69,7 +69,7 @@ export function compute(ctx) {
   for (const v of rows.slice(0, 60)) {
     const id = String(v.id || v.name).replace(/[^A-Za-z0-9]+/g, '_');
     minions.push(minion(`pur.vendor:${id}`, 'pur', 'Supplier file keeper', v.name, v.terms ? 'clear' : spend && v.billed / spend > 0.05 ? 'blind' : 'clear', v.terms ? `${money(v.billed)} billed; terms ${v.terms.terms || 'not set'}.` : `${money(v.billed)} billed across ${plural(v.bills, 'bill')}. No terms, limit or approval on file.`, { weight: Math.round((spend ? v.billed / spend : 0) * 60), amount: v.billed, action: v.terms ? undefined : fixRegister('suppliers', 'Record terms') }));
-    if (v.overdue > 0) minions.push(minion(`pur.overdue:${id}`, 'pur', 'Supplier relations watcher', v.name, v.overdue > 20000 ? 'alert' : 'watch', `${money(v.overdue)} past due to this supplier.`, { weight: 52, amount: v.overdue }));
+    if (v.overdue > 0) minions.push(minion(`pur.overdue:${id}`, 'pur', 'Supplier relations watcher', v.name, 'watch', `JobTread shows ${money(v.overdue)} past due to this supplier. If it has been paid, mark the bills paid there.`, { weight: 30 + Math.min(18, v.overdue / 5000), amount: v.overdue }));
     if (v.terms && toNum(v.terms.creditLimit) !== null && v.unpaid > toNum(v.terms.creditLimit)) minions.push(minion(`pur.limit:${id}`, 'pur', 'Credit limit watcher', v.name, 'alert', `${money(v.unpaid)} owed against a ${money(v.terms.creditLimit)} limit.`, { weight: 66, amount: v.unpaid }));
   }
   for (const m of low) minions.push(minion(`pur.stock:${m.id}`, 'pur', 'Reorder watcher', m.name, 'watch', `${m.onHand} ${m.unit || ''} on hand, reorder at ${m.reorderLevel}.`, { weight: 38 }));

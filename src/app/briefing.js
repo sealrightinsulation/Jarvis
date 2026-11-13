@@ -35,16 +35,16 @@ export function buildBriefing(computed, opts) {
 
   const cash = g(() => results.csh.data.cash);
   const fc = g(() => results.csh.data.forecast);
-  if (cash && cash.known) add(fc && fc.low.balance < 0 ? 'alert' : 'info', `${money(cash.amount)} in the bank${cash.complete ? '' : ' that I can see'}${fc && fc.startKnown && fc.low.balance < 0 ? `, and on known bills alone it goes ${money(Math.abs(fc.low.balance))} short within thirteen weeks` : ''}.`, { sheet: 'csh' });
+  if (cash && cash.known) add(fc && fc.low.balance < 0 ? 'alert' : 'info', `${money(cash.amount)} in the bank${cash.complete ? '' : ' that I can see'}${fc && fc.startKnown && fc.low.balance < 0 ? `, and if every bill on record is really still owed it goes ${money(Math.abs(fc.low.balance))} short within thirteen weeks` : ''}.`, { sheet: 'csh' });
   else add('blind', 'I cannot see a bank balance for the scope you are looking at. Enter one and the cash forecast switches on.', { settings: 'main', field: 'cashAb' });
 
   const ar = g(() => results.csh.data.ar);
   if (ar && ar.loaded && ar.overdueTotal > 0) add('watch', `${money(ar.overdueTotal)} is overdue from ${plural(ar.overdue.length, 'invoice')}. ${ar.overdue[0].customer} is the oldest at ${ar.overdue[0].daysOverdue} days.`, { sheet: 'csh' });
   const ap = g(() => results.csh.data.ap);
-  if (ap && ap.loaded && ap.overdueTotal > 0) add('alert', `${money(ap.overdueTotal)} of supplier bills are past due in JobTread, out of ${money(ap.total)} unpaid.`, { sheet: 'pur' });
+  if (ap && ap.loaded && ap.overdueTotal > 0) add('alert', `JobTread shows ${money(ap.overdueTotal)} of supplier bills past due, out of ${money(ap.total)} unpaid. Any already paid by cheque or e-transfer need marking paid there, or every cash figure here is too gloomy.`, { sheet: 'csh' });
 
   const jobs = g(() => results.job.data.jobs.filter((j) => j.health === 'alert' && j.hasBudget && j.projectedMargin < 0)) || [];
-  if (jobs.length) add('alert', `${jobs[0].name} is budgeted to cost ${money(-jobs[0].projectedMargin)} more than its contract.${jobs.length > 1 ? ` ${jobs.length - 1} more ${jobs.length === 2 ? 'job is' : 'jobs are'} underwater too.` : ''}`, { sheet: 'job', job: jobs[0].id });
+  if (jobs.length) add('alert', `JobTread projects ${jobs[0].name} to cost ${money(-jobs[0].projectedMargin)} more than its price.${jobs.length > 1 ? ` ${jobs.length - 1} more ${jobs.length === 2 ? 'job is' : 'jobs are'} projected to lose money too.` : ''}`, { sheet: 'job', job: jobs[0].id });
 
   const sal = g(() => results.sal.data);
   if (sal && sal.loaded && sal.staleQuotes.length) add('watch', `${plural(sal.staleQuotes.length, 'quote')} worth ${money(sal.staleQuotes.reduce((t, q) => t + q.value, 0))} ${sal.staleQuotes.length === 1 ? 'has' : 'have'} had no answer in over ${sal.stale} days.`, { sheet: 'sal' });

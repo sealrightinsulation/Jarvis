@@ -131,7 +131,7 @@ export function compute(ctx) {
     });
     const need = round2(rows.reduce((t, r) => t + r.toPay, 0));
     const gap = round2(rows.filter((r) => r.gap > 0).reduce((t, r) => t + r.gap, 0));
-    it['csh.cash_to_complete'] = partial(`${money(need)} still to pay out`, `Remaining budgeted cost plus unpaid bills on ${plural(active.length, 'signed job')}${withBudget.length < active.length ? ` (${active.length - withBudget.length} without a budget count unpaid bills only)` : ''}.`, 'JobTread budgets and bills', 'none', fixSheet('job', 'Open job costing'));
+    it['csh.cash_to_complete'] = partial(`${money(need)} still to pay out`, `Projected cost not yet incurred plus bills received but unpaid, on ${plural(active.length, 'signed job')}${withBudget.length < active.length ? ` (${active.length - withBudget.length} without a budget count unpaid bills only)` : ''}.`, 'JobTread budgets and bills', 'none', fixSheet('job', 'Open job costing'));
     it['csh.project_financing'] = partial(
       gap > 0 ? `${money(gap)} to find` : 'Covered by billings',
       gap > 0 ? `${rows.filter((r) => r.gap > 0).map((r) => `${r.name}: ${money(r.gap)}`).join('; ')}. That is how much more each job still has to pay out than it has left to bill and collect.` : 'On every signed job, what is left to bill and collect covers what is left to pay.',
@@ -166,7 +166,9 @@ export function compute(ctx) {
     minions.push(minion(`csh.inv:${i.company}:${i.id}`, 'csh', 'Collections chaser', `Invoice ${i.number || i.id} · ${i.customer}`, status, `${money(i.balance)} ${i.daysOverdue > 0 ? `${i.daysOverdue} days overdue` : dueText(-i.daysUntilDue)}${i.balance < i.total ? ` (part paid of ${money(i.total)})` : ''}.`, { weight: Math.min(95, 50 + i.daysOverdue / 3), amount: i.balance, action: i.daysOverdue > 0 ? { label: 'Draft a reminder', go: { ask: `Draft a short, firm, friendly payment reminder to ${i.customer} for invoice ${i.number}, ${money(i.balance)}, now ${i.daysOverdue} days overdue.` } } : undefined }));
   }
   for (const b of ap.bills) {
-    minions.push(minion(`csh.bill:${b.id}`, 'csh', 'Supplier bill watcher', `${b.account} · ${b.job || 'no job'}`, b.daysOverdue > 30 ? 'alert' : b.daysOverdue > 0 ? 'watch' : 'clear', `${money(b.balance)} ${b.daysOverdue > 0 ? `${b.daysOverdue} days past due` : b.dueDate ? `due ${shortDate(b.dueDate, now)}` : 'with no due date'} in JobTread.`, { weight: Math.min(85, 40 + b.daysOverdue / 3), amount: b.balance }));
+    // JobTread only knows a bill is paid if someone marks it, so a late bill is a prompt to
+    // check, not proof of a debt. The totals on the sheet carry the alarm; each bill just watches.
+    minions.push(minion(`csh.bill:${b.id}`, 'csh', 'Supplier bill watcher', `${b.account} · ${b.job || 'no job'}`, b.daysOverdue > 0 ? 'watch' : 'clear', `${money(b.balance)} ${b.daysOverdue > 0 ? `shows ${b.daysOverdue} days past due` : b.dueDate ? `due ${shortDate(b.dueDate, now)}` : 'with no due date'} in JobTread.${b.daysOverdue > 0 ? ' If it has been paid, mark it paid there.' : ''}`, { weight: Math.min(48, 20 + b.daysOverdue / 6), amount: b.balance }));
   }
   if (bankInScope) {
     const recent = isoDate(addDays(now, -60));

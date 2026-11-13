@@ -31,7 +31,7 @@ export function compute(ctx) {
 
   const withMargin = rows.filter((c) => c.projectedMargin !== null).sort((a, b) => b.projectedMargin - a.projectedMargin);
   it['cus.top_profit'] = withMargin.length
-    ? partial(`${withMargin[0].name}: ${money(withMargin[0].projectedMargin)} projected`, `Only ${plural(withMargin.length, 'customer')} ${withMargin.length === 1 ? 'has' : 'have'} a signed JobTread job with a budget, so profit can be ranked for ${withMargin.length === 1 ? 'that one' : 'those'} alone${withMargin.some((c) => c.projectedMargin < 0) ? `; ${withMargin.filter((c) => c.projectedMargin < 0).map((c) => c.name).join(', ')} ${withMargin.filter((c) => c.projectedMargin < 0).length === 1 ? 'is' : 'are'} projected to lose money` : ''}. Everyone else is revenue only.`, 'JobTread budgets', withMargin.some((c) => c.projectedMargin < 0) ? 'alert' : 'none')
+    ? partial(`${withMargin[0].name}: ${money(withMargin[0].projectedMargin)} projected`, `Only ${plural(withMargin.length, 'customer')} ${withMargin.length === 1 ? 'has' : 'have'} a signed JobTread job with a budget, so projected profit can be ranked for ${withMargin.length === 1 ? 'that one' : 'those'} alone${withMargin.some((c) => c.projectedMargin < 0) ? `; ${withMargin.filter((c) => c.projectedMargin < 0).map((c) => c.name).join(', ')} ${withMargin.filter((c) => c.projectedMargin < 0).length === 1 ? 'is' : 'are'} projected to lose money` : ''}. Everyone else is revenue only.`, 'JobTread budgets', withMargin.some((c) => c.projectedMargin < 0) ? 'alert' : 'none')
     : blind('Profit by customer needs job costs. QuickBooks has none, and no signed JobTread job has a budget.', { label: 'Open job costing', go: { sheet: 'job' } });
 
   const payers = rows.filter((c) => c.paidCount >= 1);

@@ -155,7 +155,7 @@ export function cashPosition(model, settings, scope) {
     if (manual !== null && (!bank || bank.cashBalance === null || (manualAsOf && feedAsOf && manualAsOf >= feedAsOf))) {
       parts.push({ company: k, amount: manual, asOf: manualAsOf || null, source: 'typed in by you' });
     } else if (bank && bank.cashBalance !== null) {
-      parts.push({ company: k, amount: bank.cashBalance, asOf: feedAsOf, source: `bank feed (${bank.accounts.filter((a) => a.type === 'bank').map((a) => a.name).join(', ')})`, feed: true });
+      parts.push({ company: k, amount: bank.cashBalance, asOf: feedAsOf, source: `the bank feed for ${bank.accounts.filter((a) => a.type === 'bank').map((a) => a.name).join(', ')}`, feed: true });
     } else if (manual !== null) {
       parts.push({ company: k, amount: manual, asOf: manualAsOf || null, source: 'typed in by you' });
     } else {
